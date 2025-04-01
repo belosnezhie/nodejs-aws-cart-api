@@ -1,0 +1,133 @@
+{
+  "version": "39.0.0",
+  "artifacts": {
+    "CartServiceStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CartServiceStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CartServiceStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "CartServiceStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/449d3c3023c0246cecb8e566dfa06dfd318edd88db41e754aea73644916eeeb7.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CartServiceStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CartServiceStack.assets"
+      ],
+      "metadata": {
+        "/CartServiceStack": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "If you are relying on AWS SDK v2 to be present in the Lambda environment already, please explicitly configure a NodeJS runtime of Node 16 or lower. [ack: @aws-cdk/aws-lambda-nodejs:sdkV2NotInRuntime]",
+            "trace": [
+              "Annotations.addMessage (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1608)",
+              "Annotations.addWarningV2 (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/node_modules/aws-cdk-lib/core/lib/annotations.js:1:825)",
+              "new Bundling (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/node_modules/aws-cdk-lib/aws-lambda-nodejs/lib/bundling.js:1:3762)",
+              "Function.bundle (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/node_modules/aws-cdk-lib/aws-lambda-nodejs/lib/bundling.js:1:1066)",
+              "new NodejsFunction (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/node_modules/aws-cdk-lib/aws-lambda-nodejs/lib/function.js:1:2288)",
+              "new CartServiceStack (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/cdkStack/lib/cartServiceStack.ts:11:31)",
+              "Object.<anonymous> (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/cdkStack/bin/cartService.ts:6:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1376:14)",
+              "Module.m._compile (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/node_modules/ts-node/src/index.ts:1618:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1435:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/node_modules/ts-node/src/index.ts:1621:12)",
+              "Module.load (node:internal/modules/cjs/loader:1207:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:1023:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:135:12)",
+              "phase4 (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/node_modules/ts-node/src/bin.ts:649:14)",
+              "bootstrap (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/node_modules/ts-node/src/bin.ts:95:10)",
+              "main (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/node_modules/ts-node/src/bin.ts:55:10)",
+              "Object.<anonymous> (/Users/mariatrejer/RS School/AWS Cource/nodejs-aws-cart-api/node_modules/ts-node/src/bin.ts:800:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1376:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1435:10)",
+              "Module.load (node:internal/modules/cjs/loader:1207:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:1023:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:135:12)",
+              "node:internal/main/run_main_module:28:49"
+            ]
+          }
+        ],
+        "/CartServiceStack/CartServiceLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CartServiceLambdaServiceRoleE2F0A3DC"
+          }
+        ],
+        "/CartServiceStack/CartServiceLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CartServiceLambdaEB737A77"
+          }
+        ],
+        "/CartServiceStack/CartServiceLambda/FunctionUrl/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CartServiceLambdaFunctionUrl5332112E"
+          }
+        ],
+        "/CartServiceStack/CartServiceLambda/invoke-function-url": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CartServiceLambdainvokefunctionurl68115D97"
+          }
+        ],
+        "/CartServiceStack/FunctionUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FunctionUrl"
+          }
+        ],
+        "/CartServiceStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CartServiceStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/CartServiceStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CartServiceStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CartServiceStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
