@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { Cart } from '../models';
 import { PutCartPayload } from 'src/order/type';
@@ -10,6 +10,7 @@ import { CartItem as CartItemEntity } from 'src/db/cart.item.entity';
 @Injectable()
 export class Cart1Service {
   private userCarts: Record<string, Cart> = {};
+  private readonly logger = new Logger(Cart1Service.name);
 
   @InjectRepository(CartEntity)
   private cartRepo: Repository<CartEntity>;
@@ -41,7 +42,10 @@ export class Cart1Service {
   async findOrCreateByUserId(userId: string): Promise<CartEntity> {
     const userCart = await this.findByUserId(userId);
 
+    this.logger.log('findOrCreateByUserId');
+
     if (userCart) {
+      this.logger.log(`userCart:${userCart}`);
       return userCart;
     }
 

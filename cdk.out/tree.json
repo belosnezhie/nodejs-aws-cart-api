@@ -108,15 +108,19 @@
                       "s3Bucket": {
                         "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
                       },
-                      "s3Key": "92b821f5b79df756a7564271670fa444945b309455ee07e1db80c086cac0eef7.zip"
+                      "s3Key": "8460bbc5391a45504eceb9001b5821e7a085b4944cb29909063a9de8e400fb83.zip"
                     },
                     "environment": {
                       "variables": {
-                        "NODE_ENV": "production"
+                        "NODE_ENV": "production",
+                        "DB_HOST": "rss-store-database.cfscmiksichm.eu-central-1.rds.amazonaws.com",
+                        "DB_PORT": "5432",
+                        "DB_USERNAME": "postgres",
+                        "DB_PASSWORD": "qkFpeLMYbc8YBkJLT76Z",
+                        "DB_NAME": "rss_store_database"
                       }
                     },
                     "handler": "index.handler",
-                    "memorySize": 1024,
                     "role": {
                       "Fn::GetAtt": [
                         "CartServiceLambdaServiceRoleE2F0A3DC",

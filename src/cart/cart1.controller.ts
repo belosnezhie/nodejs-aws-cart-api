@@ -9,6 +9,7 @@ import {
   HttpStatus,
   HttpCode,
   BadRequestException,
+  Inject,
 } from '@nestjs/common';
 import { BasicAuthGuard } from '../auth';
 import { Order, OrderService } from '../order';
@@ -19,23 +20,34 @@ import { CartItem } from './models';
 import { CreateOrderDto, PutCartPayload } from 'src/order/type';
 import { Cart as CartEntity } from '../db/cart.entity';
 import { CartItem as CartItemEntity } from 'src/db/cart.item.entity';
+import { console } from 'inspector';
+import { Logger, Injectable } from '@nestjs/common';
 
 @Controller('api/profile/cart1')
 export class Cart1Controller {
-  constructor(
-    private cartService: Cart1Service,
-    private orderService: OrderService,
-  ) {}
+  private readonly logger = new Logger(Cart1Controller.name);
+
+  @Inject(Cart1Service)
+  private cartService: Cart1Service;
+
+  // constructor(
+  //   private cartService: Cart1Service,
+  //   private orderService: OrderService,
+  // ) {}
 
   // @UseGuards(JwtAuthGuard)
   // @UseGuards(BasicAuthGuard)
   @Get()
   async findUserCart(@Req() req: AppRequest): Promise<CartItemEntity[]> {
+    this.logger.log('findUserCart');
     const cart = await this.cartService.findOrCreateByUserId(
       getUserIdFromRequest(req),
     );
 
     return cart.items;
+
+    // this.logger.log('findUserCart');
+    // return 'ok';
   }
 
   // // @UseGuards(JwtAuthGuard)

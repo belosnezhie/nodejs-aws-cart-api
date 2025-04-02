@@ -26,7 +26,7 @@ export class CartController {
   ) {}
 
   // @UseGuards(JwtAuthGuard)
-  @UseGuards(BasicAuthGuard)
+  // @UseGuards(BasicAuthGuard)
   @Get()
   findUserCart(@Req() req: AppRequest): CartItem[] {
     const cart = this.cartService.findOrCreateByUserId(
