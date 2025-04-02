@@ -1,7 +1,7 @@
 import { Entity, ManyToOne, PrimaryColumn, Column, JoinColumn } from 'typeorm';
 import { Cart } from './cart.entity';
 
-@Entity()
+@Entity('cart_items')
 export class CartItem {
   @PrimaryColumn('uuid')
   cart_id: string;

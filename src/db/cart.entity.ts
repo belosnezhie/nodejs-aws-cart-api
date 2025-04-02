@@ -7,12 +7,12 @@ import {
 } from 'typeorm';
 import { CartItem } from './cart.item.entity';
 
-enum CartStatuses {
+export enum CartStatuses {
   OPEN = 'OPEN',
   ORDERED = 'ORDERED',
 }
 
-@Entity()
+@Entity('carts')
 export class Cart {
   @PrimaryColumn('uuid')
   id: string;
