@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { CartItem } from './cartItem';
+import { CartItem } from './cart.item.entity';
 
 enum CartStatuses {
   OPEN = 'OPEN',
