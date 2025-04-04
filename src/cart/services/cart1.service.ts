@@ -14,6 +14,8 @@ export class Cart1Service {
 
   @InjectRepository(CartEntity)
   private cartRepo: Repository<CartEntity>;
+  @InjectRepository(CartItemEntity)
+  private cartItemRepo: Repository<CartItemEntity>;
 
   async findByUserId(userId: string): Promise<CartEntity> {
     return await this.cartRepo.findOne({
@@ -52,25 +54,46 @@ export class Cart1Service {
     return this.createByUserId(userId);
   }
 
-  // updateByUserId(userId: string, payload: PutCartPayload): Cart {
-  //   const userCart = this.findOrCreateByUserId(userId);
+  async updateByUserId(
+    userId: string,
+    payload: PutCartPayload,
+  ): Promise<CartEntity> {
+    const userCart = await this.findOrCreateByUserId(userId);
 
-  //   const index = userCart.items.findIndex(
-  //     ({ product }) => product.id === payload.product.id,
-  //   );
+    const index = userCart.items.findIndex(
+      ({ product_id }) => product_id === payload.product.id,
+    );
 
-  //   if (index === -1) {
-  //     userCart.items.push(payload);
-  //   } else if (payload.count === 0) {
-  //     userCart.items.splice(index, 1);
-  //   } else {
-  //     userCart.items[index] = payload;
-  //   }
+    if (index === -1) {
+      const cartItem = this.cartItemRepo.create({
+        product_id: payload.product.id,
+        count: payload.count,
+        cart: userCart,
+      });
+      this.logger.log('updateByUserId, create product' + payload.product.id);
+      userCart.items.push(cartItem);
+    } else if (payload.count === 0) {
+      await this.cartItemRepo.delete({
+        cart: { id: userCart.id },
+        product_id: payload.product.id,
+      });
+      this.logger.log('updateByUserId, delete product' + payload.product.id);
+      userCart.items.splice(index, 1);
+    } else {
+      userCart.items[index].count = payload.count;
+      await this.cartItemRepo.save(userCart.items[index]);
+    }
 
-  //   return userCart;
-  // }
+    return userCart;
+  }
 
-  // removeByUserId(userId): void {
-  //   this.userCarts[userId] = null;
-  // }
+  async removeByUserId(userId: string): Promise<void> {
+    const userCart = await this.findByUserId(userId);
+
+    if (userCart) {
+      await this.cartRepo.delete(userCart.id);
+    }
+
+    this.userCarts[userId] = null;
+  }
 }
