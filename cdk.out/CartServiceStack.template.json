@@ -41,7 +41,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "c6e4e8facc7c6e7feb191eb70056e38364be7c784968332a0e236c3d265677e4.zip"
+     "S3Key": "7844169fd77c95b431cbef957211d38de132bca228394b92b4e9b6ae80141b40.zip"
     },
     "Environment": {
      "Variables": {
@@ -68,7 +68,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "CartServiceStack/CartServiceLambda/Resource",
-    "aws:asset:path": "asset.c6e4e8facc7c6e7feb191eb70056e38364be7c784968332a0e236c3d265677e4",
+    "aws:asset:path": "asset.7844169fd77c95b431cbef957211d38de132bca228394b92b4e9b6ae80141b40",
     "aws:asset:is-bundled": true,
     "aws:asset:property": "Code"
    }
