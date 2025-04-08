@@ -1,7 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Inject,
+  forwardRef,
+  Logger,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/services/users.service';
 import { User } from '../users/models';
+import { Users as UserEntity } from '../db/user.entity';
 // import { contentSecurityPolicy } from 'helmet';
 type TokenResponse = {
   token_type: string;
@@ -10,30 +17,37 @@ type TokenResponse = {
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
+    @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
 
-  register(payload: User) {
-    const user = this.usersService.findOne(payload.name);
+  async register(payload: UserEntity) {
+    const user = await this.usersService.findOne(payload.name);
+
+    this.logger.log('user', JSON.stringify(user));
 
     if (user) {
       throw new BadRequestException('User with such name already exists');
     }
 
-    const { id: userId } = this.usersService.createOne(payload);
+    this.logger.log('payload', JSON.stringify(payload));
+
+    const { id: userId } = await this.usersService.createOne(payload);
     return { userId };
   }
 
-  validateUser(name: string, password: string): User {
-    const user = this.usersService.findOne(name);
+  async validateUser(name: string, password: string): Promise<User> {
+    const user = await this.usersService.findOne(name);
 
-    if (user) {
-      return user;
+    if (!user) {
+      return null;
     }
 
-    return this.usersService.createOne({ name, password });
+    return await this.usersService.createOne({ name, password });
   }
 
   login(user: User, type: 'jwt' | 'basic' | 'default'): TokenResponse {

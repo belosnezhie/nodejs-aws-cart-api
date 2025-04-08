@@ -12,6 +12,8 @@ import { ConfigModule } from '@nestjs/config';
 //Entities
 import { Cart } from './db/cart.entity';
 import { CartItem } from './db/cart.item.entity';
+import { Users } from './db/user.entity';
+import { Orders } from './db/order.entity';
 
 @Module({
   imports: [
@@ -26,7 +28,7 @@ import { CartItem } from './db/cart.item.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Cart, CartItem],
+      entities: [Cart, CartItem, Users, Orders],
       // synchronize: true,
       ssl: {
         rejectUnauthorized: false,

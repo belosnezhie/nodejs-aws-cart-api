@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Body,
   HttpCode,
+  Inject,
 } from '@nestjs/common';
 import {
   LocalAuthGuard,
@@ -14,12 +15,16 @@ import {
   // JwtAuthGuard,
   BasicAuthGuard,
 } from './auth';
-import { User } from './users';
+// import { User } from './users';
 import { AppRequest } from './shared';
+import { Users as UserEntity } from './db/user.entity';
 
 @Controller()
 export class AppController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    @Inject(AuthService)
+    private readonly authService: AuthService,
+  ) {}
 
   @Get(['', 'ping'])
   healthCheck() {
@@ -32,8 +37,8 @@ export class AppController {
   @Post('api/auth/register')
   @HttpCode(HttpStatus.CREATED)
   // TODO ADD validation
-  register(@Body() body: User) {
-    return this.authService.register(body);
+  async register(@Body() body: UserEntity) {
+    return await this.authService.register(body);
   }
 
   @UseGuards(LocalAuthGuard)

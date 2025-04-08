@@ -33,11 +33,14 @@ export class CartController {
   @Inject(OrderService)
   private orderService: OrderService;
 
-  constructor(
-    // private cartService: Cart1Service,
-    // private orderService: OrderService,
-    private readonly dataSource: DataSource,
-  ) {}
+  @Inject(DataSource)
+  private dataSource: DataSource;
+
+  // constructor(
+  // private cartService: Cart1Service,
+  // private orderService: OrderService,
+  // private readonly dataSource: DataSource,
+  // ) {}
 
   // @UseGuards(JwtAuthGuard)
   // @UseGuards(BasicAuthGuard)
@@ -82,7 +85,11 @@ export class CartController {
     const userId = getUserIdFromRequest(req);
 
     const result = await this.dataSource.transaction(async (manager) => {
+      this.logger.log('checkout', body);
+
       const cart = await this.cartService.findByUserId(userId, manager);
+
+      this.logger.log('cart', cart);
 
       if (!(cart && cart.items.length)) {
         throw new BadRequestException('Cart is empty');
@@ -104,8 +111,11 @@ export class CartController {
         manager,
       );
 
+      this.logger.log('order', order);
       // update Cart status
       await this.cartService.updateCartStatus(userId, manager);
+
+      this.logger.log('cart updated', cart);
 
       return order;
     });

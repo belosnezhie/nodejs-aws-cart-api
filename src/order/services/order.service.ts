@@ -34,6 +34,10 @@ export class OrderService {
 
     const repo = manager ? manager.getRepository(OrderEntity) : this.orderRepo;
 
+    this.logger.log('in create order');
+
+    // this.logger.log('repo' + JSON.stringify(repo));
+
     const orderData: OrderEntity = {
       id,
       user_id: data.userId,
@@ -44,6 +48,8 @@ export class OrderService {
       status: OrderStatus.Open,
       total: data.total,
     };
+
+    this.logger.log('orderData' + JSON.stringify(orderData));
 
     const createdOrder = await repo.save(orderData);
 

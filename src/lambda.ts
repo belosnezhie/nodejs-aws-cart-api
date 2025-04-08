@@ -45,7 +45,6 @@ function getTransformedEvent(event: any) {
     ...event,
     path: event.rawPath || '/',
     httpMethod: event.requestContext.http.method,
-    // Ensure other required properties exist
     queryStringParameters: event.queryStringParameters || {},
     pathParameters: event.pathParameters || {},
     headers: {
