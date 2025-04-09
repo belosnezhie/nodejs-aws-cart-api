@@ -29,7 +29,8 @@ import { Orders } from './db/order.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [Cart, CartItem, Users, Orders],
-      // synchronize: true,
+      synchronize: false,
+      logging: true,
       ssl: {
         rejectUnauthorized: false,
       },

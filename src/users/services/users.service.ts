@@ -22,15 +22,18 @@ export class UsersService {
   async createOne({
     name,
     password,
+    email,
   }: Partial<UserEntity>): Promise<UserEntity> {
     const id = randomUUID();
-    const newUser = { id, name, password };
-
-    const createdUser = await this.userRepo.create(newUser);
-    this.logger.log('createOne', createdUser);
-
-    this.users[id] = createdUser;
-
+    const newUser: UserEntity = {
+      id: id,
+      name: name,
+      email: email,
+      password: password,
+    };
+    this.logger.log('createOne: new user', newUser);
+    const createdUser = await this.userRepo.save(newUser);
+    this.logger.log('createOne: user from DB', createdUser);
     return createdUser;
   }
 }

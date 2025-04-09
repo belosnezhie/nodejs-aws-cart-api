@@ -5,7 +5,7 @@ export class Users {
   @PrimaryColumn('uuid')
   id: string;
 
-  @Column('user_name')
+  @Column('text')
   name: string;
 
   @Column('text')
