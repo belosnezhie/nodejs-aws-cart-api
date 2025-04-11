@@ -24,10 +24,15 @@ export class CartService {
   ): Promise<CartEntity> {
     const repo = manager ? manager.getRepository(CartEntity) : this.cartRepo;
 
-    return await repo.findOne({
+    this.logger.log('findByUserId from cart.service');
+    const cart = await repo.findOne({
       where: { user_id: userId },
       relations: { items: true },
     });
+
+    this.logger.log('findByUserId from cart.service', cart);
+
+    return cart;
   }
 
   createByUserId(user_id: string): CartEntity {

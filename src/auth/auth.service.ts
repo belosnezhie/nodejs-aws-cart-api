@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/services/users.service';
 import { User } from '../users/models';
 import { Users as UserEntity } from '../db/user.entity';
+import { use } from 'passport';
 // import { contentSecurityPolicy } from 'helmet';
 type TokenResponse = {
   token_type: string;
@@ -43,14 +44,23 @@ export class AuthService {
   async validateUser(name: string, password: string): Promise<User> {
     const user = await this.usersService.findOne(name);
 
-    if (!user) {
-      return null;
+    // if (!user) {
+    //   return null;
+    // }
+
+    // return await this.usersService.createOne({ name, password });
+
+    if (user) {
+      return user;
     }
 
-    return await this.usersService.createOne({ name, password });
+    return null;
   }
 
-  login(user: User, type: 'jwt' | 'basic' | 'default'): TokenResponse {
+  async login(
+    user: Partial<UserEntity>,
+    type: 'jwt' | 'basic' | 'default',
+  ): Promise<TokenResponse> {
     const LOGIN_MAP = {
       jwt: this.loginJWT,
       basic: this.loginBasic,
@@ -61,7 +71,7 @@ export class AuthService {
     return login ? login(user) : LOGIN_MAP.default(user);
   }
 
-  loginJWT(user: User) {
+  loginJWT(user: Partial<UserEntity>) {
     const payload = { username: user.name, sub: user.id };
 
     return {
@@ -70,11 +80,11 @@ export class AuthService {
     };
   }
 
-  loginBasic(user: User) {
+  loginBasic(user: Partial<UserEntity>) {
     // const payload = { username: user.name, sub: user.id };
     console.log(user);
 
-    function encodeUserToken(user: User) {
+    function encodeUserToken(user: Partial<UserEntity>) {
       const { name, password } = user;
       const buf = Buffer.from([name, password].join(':'), 'utf8');
 

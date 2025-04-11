@@ -43,19 +43,20 @@ export class CartController {
   // ) {}
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Get()
   async findUserCart(@Req() req: AppRequest): Promise<CartItemEntity[]> {
     this.logger.log('findUserCart');
     const cart = await this.cartService.findOrCreateByUserId(
       getUserIdFromRequest(req),
     );
-
+    this.logger.log('founded user cart', cart);
+    this.logger.log('founded user cart items', cart.items);
     return cart.items;
   }
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Put()
   async updateUserCart(
     @Req() req: AppRequest,
@@ -71,7 +72,7 @@ export class CartController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Delete()
   @HttpCode(HttpStatus.OK)
   async clearUserCart(@Req() req: AppRequest) {
@@ -79,18 +80,18 @@ export class CartController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Put('order')
   async checkout(@Req() req: AppRequest, @Body() body: CreateOrderDto) {
-    // const userId = getUserIdFromRequest(req);
-    const userId = '9f7541ed-92ce-4934-86b7-8ca48abd8ae3';
+    const userId = getUserIdFromRequest(req);
+    // const userId = '9f7541ed-92ce-4934-86b7-8ca48abd8ae3';
 
     const result = await this.dataSource.transaction(async (manager) => {
       this.logger.log('checkout', body);
 
       const cart = await this.cartService.findByUserId(userId, manager);
 
-      this.logger.log('cart', cart);
+      this.logger.log('checkout cart', cart);
 
       if (!(cart && cart.items.length)) {
         throw new BadRequestException('Cart is empty');
@@ -126,7 +127,7 @@ export class CartController {
     };
   }
 
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Get('order')
   async getOrder(): Promise<OrderEntity[]> {
     return await this.orderService.getAll();
