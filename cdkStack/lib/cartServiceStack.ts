@@ -11,11 +11,10 @@ export class CartServiceStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // Create Lambda function
     const cartServiceLambda = new NodejsFunction(this, 'CartServiceLambda', {
       runtime: lambda.Runtime.NODEJS_20_X,
       handler: 'handler',
-      entry: join(__dirname, '../../src/lambda.ts'), // Path relative to the stack
+      entry: join(__dirname, '../../src/lambda.ts'),
       bundling: {
         externalModules: [
           'aws-sdk',
@@ -39,17 +38,15 @@ export class CartServiceStack extends cdk.Stack {
       // memorySize: 1024,
     });
 
-    // Add Function URL
     const fnUrl = cartServiceLambda.addFunctionUrl({
       authType: lambda.FunctionUrlAuthType.NONE,
-      cors: {
-        allowedOrigins: ['*'],
-        allowedMethods: [lambda.HttpMethod.ALL],
-        allowedHeaders: ['*'],
-      },
+      // cors: {
+      //   allowedOrigins: ['*'],
+      //   allowedMethods: [lambda.HttpMethod.ALL],
+      //   allowedHeaders: ['*'],
+      // },
     });
 
-    // Output the Function URL
     new cdk.CfnOutput(this, 'FunctionUrl', {
       value: fnUrl.url,
       description: 'URL for the Lambda function',

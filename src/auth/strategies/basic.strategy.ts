@@ -3,6 +3,7 @@ import {
   Inject,
   Injectable,
   UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 
@@ -12,6 +13,8 @@ import { AuthService } from '../auth.service';
 
 @Injectable()
 export class BasicStrategy extends PassportStrategy(Strategy) {
+  private readonly logger = new Logger(BasicStrategy.name);
+
   constructor(
     @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
@@ -20,7 +23,11 @@ export class BasicStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(username: string, pass: string): Promise<any> {
+    this.logger.log('validate BasicStrategy', username, pass);
+
     const user = await this.authService.validateUser(username, pass);
+
+    this.logger.log('validate', user);
 
     if (!user) {
       throw new UnauthorizedException();

@@ -30,7 +30,10 @@ export class CartService {
       relations: { items: true },
     });
 
-    this.logger.log('findByUserId from cart.service', cart);
+    this.logger.log(
+      'Cart founded in findByUserId from cart.service',
+      JSON.stringify(cart),
+    );
 
     return cart;
   }
@@ -58,7 +61,7 @@ export class CartService {
     this.logger.log('findOrCreateByUserId');
 
     if (userCart) {
-      this.logger.log(`userCart:${userCart}`);
+      this.logger.log(`userCart:${JSON.stringify(userCart)}`);
       return userCart;
     }
 
@@ -71,9 +74,13 @@ export class CartService {
   ): Promise<CartEntity> {
     const userCart = await this.findOrCreateByUserId(userId);
 
+    this.logger.log('payload.id from updateByUserId' + payload.product.id);
+
     const index = userCart.items.findIndex(
       ({ product_id }) => product_id === payload.product.id,
     );
+
+    this.logger.log('index from updateByUserId' + index);
 
     if (index === -1) {
       const cartItem = this.cartItemRepo.create({

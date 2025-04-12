@@ -24,7 +24,6 @@
     "cdk:destroy": "cdk destroy",
     "cdk:synth": "cdk synth",
     "deploy": "npm run build && cdk destroy --force && cdk deploy --require-approval never"
-
   },
   "dependencies": {
     "@nestjs/common": "^10.0.3",
@@ -37,6 +36,7 @@
     "@vendia/serverless-express": "^4.12.6",
     "aws-cdk-lib": "^2.178.2",
     "aws-lambda": "^1.0.7",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "helmet": "^7.0.0",
     "passport": "^0.6.0",

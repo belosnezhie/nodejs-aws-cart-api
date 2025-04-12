@@ -9,6 +9,7 @@ import { AppModule } from './app.module';
 import { ConsoleLogger } from '@nestjs/common';
 import { Cart as CartEntity } from './db/cart.entity';
 import { CartItem as CartItemEntity } from './db/cart.item.entity';
+import cors from 'cors';
 
 let cachedServer: Handler;
 let dataSource: DataSource;
@@ -94,7 +95,7 @@ async function getServerResponse(
   return {
     ...response,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      // 'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers':
         'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
       ...(response.headers || {}),
@@ -122,7 +123,8 @@ async function bootstrap() {
       },
     );
 
-    nestApp.enableCors();
+    // nestApp.enableCors();
+    nestApp.use(cors());
 
     await nestApp.init();
 
