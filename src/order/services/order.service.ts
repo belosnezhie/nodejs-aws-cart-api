@@ -1,37 +1,63 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { Order } from '../models';
 import { CreateOrderPayload, OrderStatus } from '../type';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Orders as OrderEntity } from '../../db/order.entity';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class OrderService {
-  private orders: Record<string, Order> = {};
+  private orders: Record<string, OrderEntity> = {};
+  private readonly logger = new Logger(OrderService.name);
 
-  getAll() {
-    return Object.values(this.orders);
+  @InjectRepository(OrderEntity)
+  private orderRepo: Repository<OrderEntity>;
+
+  async getAll() {
+    return await this.orderRepo.find();
   }
 
-  findById(orderId: string): Order {
-    return this.orders[orderId];
+  async findById(orderId: string): Promise<OrderEntity> {
+    return await this.orderRepo.findOne({
+      where: { user_id: orderId },
+      relations: { items: true },
+    });
   }
 
-  create(data: CreateOrderPayload) {
+  async create(
+    data: CreateOrderPayload,
+    manager: EntityManager,
+  ): Promise<OrderEntity> {
     const id = randomUUID() as string;
-    const order: Order = {
+
+    const repo = manager ? manager.getRepository(OrderEntity) : this.orderRepo;
+
+    this.logger.log('in create order');
+
+    // this.logger.log('repo' + JSON.stringify(repo));
+
+    const orderData: OrderEntity = {
       id,
-      ...data,
-      statusHistory: [
-        {
-          comment: '',
-          status: OrderStatus.Open,
-          timestamp: Date.now(),
-        },
-      ],
+      user_id: data.userId,
+      items: data.items,
+      cart_id: data.cartId,
+      delivery: data.address,
+      comments: '',
+      status: OrderStatus.Open,
+      total: data.total,
     };
 
-    this.orders[id] = order;
+    this.logger.log('orderData' + JSON.stringify(orderData));
 
-    return order;
+    const createdOrder = await repo.save(orderData);
+
+    this.logger.log('Order was created:' + createdOrder.id);
+
+    this.orders[id] = createdOrder;
+
+    return createdOrder;
   }
 
   // TODO add  type
@@ -41,10 +67,5 @@ export class OrderService {
     if (!order) {
       throw new Error('Order does not exist.');
     }
-
-    this.orders[orderId] = {
-      ...data,
-      id: orderId,
-    };
   }
 }
