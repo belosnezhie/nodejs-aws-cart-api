@@ -1,23 +1,23 @@
-# FROM node:20.11.1-alpine3.19 AS builder
+FROM node:20.11.1-alpine3.19 AS builder
 
-# WORKDIR /app
+WORKDIR /app
 
-# COPY . /app
+COPY . /app
 
-# RUN npm install
+RUN npm install
 
-# RUN npm run build
+RUN npm run build
 
-# FROM node:20.11.1-alpine3.19
+FROM node:20.11.1-alpine3.19
 
-# COPY --from=builder /app .
+COPY --from=builder /app .
 
-# EXPOSE 4000
+EXPOSE 4000
 
-# ENV NODE_ENV=production
+ENV NODE_ENV=production
 
-# ENTRYPOINT ["node", "dist/src/main.js"]
+ENTRYPOINT ["node", "dist/src/main.js"]
 
-FROM traefik/whoami
+# FROM traefik/whoami
 
-EXPOSE 80
+# EXPOSE 80
