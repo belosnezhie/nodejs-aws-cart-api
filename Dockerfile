@@ -18,4 +18,4 @@ COPY --from=builder /app .
 
 EXPOSE 4000
 
-ENTRYPOINT ["node", 'dist/src/main.js']
+CMD ["node", "dist/src/main.js"]
