@@ -18,4 +18,6 @@ COPY --from=builder /app .
 
 EXPOSE 4000
 
-CMD ["node", "dist/src/main.js"]
+ENV NODE_ENV=production
+
+ENTRYPOINT ["node", "dist/src/main.js"]
