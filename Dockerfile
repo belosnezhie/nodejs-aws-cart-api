@@ -19,3 +19,5 @@
 # ENTRYPOINT ["node", "dist/src/main.js"]
 
 FROM traefik/whoami
+
+EXPOSE 80
