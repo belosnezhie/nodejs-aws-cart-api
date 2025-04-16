@@ -26,7 +26,7 @@ export class CartService {
 
     this.logger.log('findByUserId from cart.service');
     const cart = await repo.findOne({
-      where: { user_id: userId },
+      where: { user_id: userId, status: CartStatuses.OPEN },
       relations: { items: true },
     });
 
@@ -50,21 +50,26 @@ export class CartService {
       items: [],
     };
 
-    this.cartRepo.create(cart);
+    // this.cartRepo.create(cart);
+    this.cartRepo.save(cart);
 
+    this.logger.log(`Created user new cart:${JSON.stringify(cart)}`);
     return cart;
   }
 
   async findOrCreateByUserId(userId: string): Promise<CartEntity> {
     const userCart = await this.findByUserId(userId);
 
-    this.logger.log('findOrCreateByUserId');
+    this.logger.log('Founded in service user cart:' + JSON.stringify(userCart));
 
     if (userCart) {
       this.logger.log(`userCart:${JSON.stringify(userCart)}`);
       return userCart;
     }
 
+    this.logger.log(
+      'Cart was not found in findByUserId, calling createByUserId',
+    );
     return this.createByUserId(userId);
   }
 
@@ -74,7 +79,7 @@ export class CartService {
   ): Promise<CartEntity> {
     const userCart = await this.findOrCreateByUserId(userId);
 
-    this.logger.log('payload.id from updateByUserId' + payload.product.id);
+    this.logger.log('payload from updateByUserId' + payload);
 
     const index = userCart.items.findIndex(
       ({ product_id }) => product_id === payload.product.id,
@@ -88,14 +93,14 @@ export class CartService {
         count: payload.count,
         cart: userCart,
       });
-      this.logger.log('updateByUserId, create product' + payload.product.id);
+      this.logger.log('updateByUserId, create product' + cartItem.product_id);
       userCart.items.push(cartItem);
     } else if (payload.count === 0) {
-      await this.cartItemRepo.delete({
+      const cartItem = await this.cartItemRepo.delete({
         cart: { id: userCart.id },
         product_id: payload.product.id,
       });
-      this.logger.log('updateByUserId, delete product' + payload.product.id);
+      this.logger.log('updateByUserId, delete product' + cartItem);
       userCart.items.splice(index, 1);
     } else {
       userCart.items[index].count = payload.count;

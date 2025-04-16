@@ -62,15 +62,14 @@ export class CartController {
     @Req() req: AppRequest,
     @Body() body: PutCartPayload,
   ): Promise<CartItemEntity[]> {
-    this.logger.log('updateUserCart is called');
-    this.logger.log('updateUserCart body', JSON.stringify(body));
+    this.logger.log('UpdateUserCart is called', JSON.stringify(body));
 
-    // TODO: validate body payload...
     const cart = await this.cartService.updateByUserId(
       getUserIdFromRequest(req),
       body,
     );
 
+    this.logger.log('UpdateUserCart cart', cart);
     return cart.items;
   }
 

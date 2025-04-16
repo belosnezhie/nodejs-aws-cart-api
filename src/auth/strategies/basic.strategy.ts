@@ -27,7 +27,7 @@ export class BasicStrategy extends PassportStrategy(Strategy) {
 
     const user = await this.authService.validateUser(username, pass);
 
-    this.logger.log('validate', user);
+    this.logger.log('Validated user', JSON.stringify(user));
 
     if (!user) {
       throw new UnauthorizedException();
