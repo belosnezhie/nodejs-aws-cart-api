@@ -38,10 +38,10 @@ export class CartService {
     return cart;
   }
 
-  createByUserId(user_id: string): CartEntity {
+  async createByUserId(user_id: string): Promise<CartEntity> {
     const date = new Date();
 
-    const cart: CartEntity = {
+    const cartData: CartEntity = {
       id: randomUUID(),
       user_id,
       created_at: date,
@@ -51,9 +51,9 @@ export class CartService {
     };
 
     // this.cartRepo.create(cart);
-    this.cartRepo.save(cart);
+    const cart = await this.cartRepo.save(cartData);
 
-    this.logger.log(`Created user new cart:${JSON.stringify(cart)}`);
+    this.logger.log(`Created user new cart:${JSON.stringify(cartData)}`);
     return cart;
   }
 
@@ -70,7 +70,7 @@ export class CartService {
     this.logger.log(
       'Cart was not found in findByUserId, calling createByUserId',
     );
-    return this.createByUserId(userId);
+    return await this.createByUserId(userId);
   }
 
   async updateByUserId(
