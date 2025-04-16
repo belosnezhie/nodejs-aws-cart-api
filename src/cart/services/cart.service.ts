@@ -88,7 +88,7 @@ export class CartService {
     this.logger.log('index from updateByUserId' + index);
 
     if (index === -1) {
-      const cartItem = this.cartItemRepo.create({
+      const cartItem = await this.cartItemRepo.create({
         product_id: payload.product.id,
         count: payload.count,
         cart: userCart,
