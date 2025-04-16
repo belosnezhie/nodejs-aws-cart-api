@@ -11,7 +11,7 @@ COPY tsconfig*.json ./
 COPY package*.json ./
 COPY --from=deps /app/node_modules ./node_modules
 COPY src ./src
-COPY .env ./
+COPY .env* ./
 RUN npm install
 RUN npm run build
 RUN npm prune --production
