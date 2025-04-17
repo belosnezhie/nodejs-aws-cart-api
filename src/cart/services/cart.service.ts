@@ -95,6 +95,7 @@ export class CartService {
       await this.cartItemRepo.save(newItem);
       this.logger.log('updateByUserId, create product' + newItem);
       userCart.items.push(newItem);
+      this.logger.log('cart after push ' + JSON.stringify(userCart));
       await this.cartRepo.save(userCart);
     } else if (payload.count === 0) {
       const cartItem = await this.cartItemRepo.delete({
