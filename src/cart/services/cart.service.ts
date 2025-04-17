@@ -88,13 +88,14 @@ export class CartService {
     this.logger.log('index from updateByUserId' + index);
 
     if (index === -1) {
-      const cartItem = await this.cartItemRepo.create({
+      const newItem = await this.cartItemRepo.create({
         product_id: payload.product.id,
         count: payload.count,
         cart: userCart,
       });
-      this.logger.log('updateByUserId, create product' + cartItem.product_id);
-      userCart.items.push(cartItem);
+      await this.cartItemRepo.save(newItem);
+      this.logger.log('updateByUserId, create product' + newItem);
+      userCart.items.push(newItem);
     } else if (payload.count === 0) {
       const cartItem = await this.cartItemRepo.delete({
         cart: { id: userCart.id },

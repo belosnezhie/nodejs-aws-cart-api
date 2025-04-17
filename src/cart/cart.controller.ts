@@ -69,7 +69,7 @@ export class CartController {
       body,
     );
 
-    this.logger.log('UpdateUserCart cart', cart);
+    this.logger.log('UpdateUserCart cart', JSON.stringify(cart));
     return cart.items;
   }
 
