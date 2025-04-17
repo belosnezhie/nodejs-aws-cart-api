@@ -86,7 +86,6 @@ export class CartController {
   @Put('order')
   async checkout(@Req() req: AppRequest, @Body() body: CreateOrderDto) {
     const userId = getUserIdFromRequest(req);
-    // const userId = '9f7541ed-92ce-4934-86b7-8ca48abd8ae3';
 
     const result = await this.dataSource.transaction(async (manager) => {
       this.logger.log('checkout', body);

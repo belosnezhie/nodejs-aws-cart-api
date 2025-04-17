@@ -50,7 +50,6 @@ export class CartService {
       items: [],
     };
 
-    // this.cartRepo.create(cart);
     const cart = await this.cartRepo.save(cartData);
 
     this.logger.log(`Created user new cart:${JSON.stringify(cartData)}`);
@@ -96,6 +95,7 @@ export class CartService {
       await this.cartItemRepo.save(newItem);
       this.logger.log('updateByUserId, create product' + newItem);
       userCart.items.push(newItem);
+      await this.cartRepo.save(userCart);
     } else if (payload.count === 0) {
       const cartItem = await this.cartItemRepo.delete({
         cart: { id: userCart.id },
