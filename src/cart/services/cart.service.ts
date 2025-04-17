@@ -90,7 +90,7 @@ export class CartService {
       const newItem = await this.cartItemRepo.create({
         product_id: payload.product.id,
         count: payload.count,
-        cart: userCart,
+        // cart: userCart,
       });
       await this.cartItemRepo.save(newItem);
       this.logger.log('updateByUserId, create product' + newItem);
