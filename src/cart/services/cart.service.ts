@@ -108,7 +108,10 @@ export class CartService {
       await this.cartItemRepo.save(userCart.items[index]);
     }
 
-    return userCart;
+    return await this.cartRepo.findOne({
+      relations: { items: true },
+      where: { id: userCart.id },
+    });
   }
 
   async updateCartStatus(
