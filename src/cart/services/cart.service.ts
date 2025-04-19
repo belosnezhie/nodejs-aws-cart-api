@@ -26,7 +26,7 @@ export class CartService {
 
     this.logger.log('findByUserId from cart.service');
     const cart = await repo.findOne({
-      where: { user_id: userId },
+      where: { user_id: userId, status: CartStatuses.OPEN },
       relations: { items: true },
     });
 
@@ -38,10 +38,10 @@ export class CartService {
     return cart;
   }
 
-  createByUserId(user_id: string): CartEntity {
+  async createByUserId(user_id: string): Promise<CartEntity> {
     const date = new Date();
 
-    const cart: CartEntity = {
+    const cartData: CartEntity = {
       id: randomUUID(),
       user_id,
       created_at: date,
@@ -50,22 +50,26 @@ export class CartService {
       items: [],
     };
 
-    this.cartRepo.create(cart);
+    const cart = await this.cartRepo.save(cartData);
 
+    this.logger.log(`Created user new cart:${JSON.stringify(cartData)}`);
     return cart;
   }
 
   async findOrCreateByUserId(userId: string): Promise<CartEntity> {
     const userCart = await this.findByUserId(userId);
 
-    this.logger.log('findOrCreateByUserId');
+    this.logger.log('Founded in service user cart:' + JSON.stringify(userCart));
 
     if (userCart) {
       this.logger.log(`userCart:${JSON.stringify(userCart)}`);
       return userCart;
     }
 
-    return this.createByUserId(userId);
+    this.logger.log(
+      'Cart was not found in findByUserId, calling createByUserId',
+    );
+    return await this.createByUserId(userId);
   }
 
   async updateByUserId(
@@ -74,7 +78,7 @@ export class CartService {
   ): Promise<CartEntity> {
     const userCart = await this.findOrCreateByUserId(userId);
 
-    this.logger.log('payload.id from updateByUserId' + payload.product.id);
+    this.logger.log('payload from updateByUserId' + payload);
 
     const index = userCart.items.findIndex(
       ({ product_id }) => product_id === payload.product.id,
@@ -83,26 +87,33 @@ export class CartService {
     this.logger.log('index from updateByUserId' + index);
 
     if (index === -1) {
-      const cartItem = this.cartItemRepo.create({
+      const newItem = await this.cartItemRepo.create({
         product_id: payload.product.id,
         count: payload.count,
         cart: userCart,
       });
-      this.logger.log('updateByUserId, create product' + payload.product.id);
-      userCart.items.push(cartItem);
+      await this.cartItemRepo.save(newItem);
+      this.logger.log('updateByUserId, create product' + newItem);
+      userCart.items.push(newItem);
+      this.logger.log('cart after push ', userCart);
+      this.logger.log('cart after push ', JSON.stringify(userCart));
+      await this.cartRepo.save(userCart);
     } else if (payload.count === 0) {
-      await this.cartItemRepo.delete({
+      const cartItem = await this.cartItemRepo.delete({
         cart: { id: userCart.id },
         product_id: payload.product.id,
       });
-      this.logger.log('updateByUserId, delete product' + payload.product.id);
+      this.logger.log('updateByUserId, delete product' + cartItem);
       userCart.items.splice(index, 1);
     } else {
       userCart.items[index].count = payload.count;
       await this.cartItemRepo.save(userCart.items[index]);
     }
 
-    return userCart;
+    return await this.cartRepo.findOne({
+      relations: { items: true },
+      where: { id: userCart.id },
+    });
   }
 
   async updateCartStatus(
