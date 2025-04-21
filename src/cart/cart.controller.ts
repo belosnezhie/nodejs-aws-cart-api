@@ -62,15 +62,14 @@ export class CartController {
     @Req() req: AppRequest,
     @Body() body: PutCartPayload,
   ): Promise<CartItemEntity[]> {
-    this.logger.log('updateUserCart is called');
-    this.logger.log('updateUserCart body', JSON.stringify(body));
+    this.logger.log('UpdateUserCart is called', JSON.stringify(body));
 
-    // TODO: validate body payload...
     const cart = await this.cartService.updateByUserId(
       getUserIdFromRequest(req),
       body,
     );
 
+    this.logger.log('UpdateUserCart cart', JSON.stringify(cart));
     return cart.items;
   }
 
@@ -87,7 +86,6 @@ export class CartController {
   @Put('order')
   async checkout(@Req() req: AppRequest, @Body() body: CreateOrderDto) {
     const userId = getUserIdFromRequest(req);
-    // const userId = '9f7541ed-92ce-4934-86b7-8ca48abd8ae3';
 
     const result = await this.dataSource.transaction(async (manager) => {
       this.logger.log('checkout', body);
